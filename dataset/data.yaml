@@ -1,0 +1,9 @@
+train: E:/consul_demo/dataset/images/train  # 改成你的train的图片目录路径
+val: E:/consul_demo/dataset/images/val  # 改成你的val的图片目录路径
+test: E:/consul_demo/dataset/images/test  # 改成你的test的图片目录路径
+
+# number of classes
+nc: 1
+
+# class names，如果改了要换成你的标签名
+names: ['cap']
