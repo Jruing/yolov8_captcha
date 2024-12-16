@@ -2,6 +2,7 @@
 > 采集某验滑块验证码，使用YOLO进行验证码缺口位置识别
 
 ```python
+dataset # 验证码数据集
 main.py # 提供页面上传返回缺口坐标信息
 script/train.py # 训练脚本
 script/yolov8n.pt # 模型文件
