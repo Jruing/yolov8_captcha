@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drag and Drop File Upload</title>
+<style>
+  #drop_zone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    color: #ccc;
+    margin: 20px;
+  }
+  #drop_zone.dragover {
+    border-color: #000;
+    color: #000;
+  }
+</style>
+</head>
+<body>
+
+<div id="drop_zone">拖拽文件到这里上传</div>
+
+<div id="response_area" style="margin: 20px; padding: 20px; border: 1px solid #000;"></div>
+
+<script>
+// 获取拖拽区域和响应区域的DOM元素
+const dropZone = document.getElementById('drop_zone');
+const responseArea = document.getElementById('response_area');
+
+// 设置拖拽事件
+dropZone.addEventListener('dragover', (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'copy'; // 显示为复制状态
+  dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', (event) => {
+  dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  dropZone.classList.remove('dragover');
+  const files = event.dataTransfer.files;
+  handleFiles(files);
+});
+
+// 处理文件的函数
+function handleFiles(files) {
+  if (files.length > 0) {
+    const file = files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // 发起请求
+    fetch('http://127.0.0.1:8000/jy_slide', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+       console.log(data);
+      displayApiResponse(data.data);
+
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+}
+
+// 展示接口返回值的函数
+function displayApiResponse(data) {
+  // 假设返回的数据格式为 [{ "x_min": 191 }]
+  for (i=0;i<data.length;i++){
+    var d = data[i];
+      responseArea.innerHTML = `
+    <p>x轴最小值: ${d.x_min} y轴最小值: ${d.y_min} x轴最大值: ${d.x_max} y轴最大值: ${d.y_max}</p>
+    <hr>
+  `;
+  }
+
+}
+</script>
+
+</body>
+</html>
